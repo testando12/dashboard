@@ -367,26 +367,23 @@ body {
     border: none;
     border-radius: 16px;
     padding: 16px;
-    overflow-y: auto;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     gap: 0;
     box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-
-.main-content.dark-dash::-webkit-scrollbar {
-    display: none;
+    min-height: 0;
 }
 
 /* ==================== GRID DO DASHBOARD ==================== */
 .dashboard-grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 240px;
-    grid-template-rows: auto auto auto;
+    grid-template-rows: 160px 230px 170px;
     gap: 10px;
     width: 100%;
+    flex: 1;
+    min-height: 0;
 }
 
 /* ==================== WIDGET CARD BASE ==================== */
@@ -670,6 +667,7 @@ body {
     padding: 12px;
     gap: 0;
     overflow: hidden;
+    position: relative;
 }
 
 .spotify-widget .sc-header {
@@ -677,6 +675,8 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 8px;
+    position: relative;
+    z-index: 2;
 }
 
 .sp-header-actions {
@@ -695,30 +695,31 @@ body {
 
 /* Cover + Track Info */
 .sp-cover-area {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
+    position: relative;
     flex: 1;
+    border-radius: 10px;
+    overflow: hidden;
     min-height: 0;
 }
 
 .sp-album-art {
-    width: 80px;
-    height: 80px;
-    flex-shrink: 0;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
+    display: block;
     border-radius: 10px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
 }
 
 .sp-track-details {
-    text-align: left;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 28px 12px 10px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.85));
     display: flex;
     flex-direction: column;
-    gap: 3px;
-    min-width: 0;
-    flex: 1;
+    gap: 1px;
 }
 
 .sp-track-name {
@@ -732,7 +733,7 @@ body {
 
 .sp-track-artist {
     font-size: 11px;
-    color: rgba(255,255,255,0.6);
+    color: rgba(255,255,255,0.7);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -740,22 +741,23 @@ body {
 
 .sp-track-album {
     font-size: 10px;
-    color: rgba(255,255,255,0.35);
+    color: rgba(255,255,255,0.4);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    display: none;
 }
 
 /* Progress Bar */
 .sp-controls-area {
-    margin-top: 8px;
+    margin-top: 6px;
     width: 100%;
 }
 
 .sp-progress-bar {
     width: 100%;
     height: 3px;
-    background: rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.2);
     border-radius: 2px;
     overflow: hidden;
 }
@@ -777,23 +779,59 @@ body {
 
 /* Playback Icon */
 .sp-playback-icon {
+    position: absolute;
+    bottom: 40px;
+    right: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 8px auto 0;
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    background: #1DB954;
+    background: rgba(255,255,255,0.9);
     color: #000;
     font-size: 12px;
-    cursor: default;
-    flex-shrink: 0;
+    z-index: 2;
 }
 
 .sp-playback-icon.paused {
-    background: rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.5);
     color: #fff;
+}
+
+/* Idle State */
+.sp-idle {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: rgba(255,255,255,0.3);
+}
+
+.sp-idle i {
+    font-size: 32px;
+    margin-bottom: 4px;
+}
+
+.sp-idle span {
+    font-size: 13px;
+}
+
+.sp-idle-sub {
+    font-size: 11px !important;
+    color: rgba(255,255,255,0.18) !important;
+}
+
+/* Login State */
+.sp-login {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
 }
 
 /* Idle State */

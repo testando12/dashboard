@@ -195,16 +195,13 @@ function updateNowPlaying(data) {
 
     container.innerHTML = `
         <div class="sp-cover-area">
-            <div style="position:relative; flex-shrink:0;">
-                <img class="sp-album-art" src="${albumArt}" alt="${album}">
-                <div class="sp-playback-icon ${isPlaying ? 'playing' : 'paused'}" style="position:absolute;bottom:4px;right:4px;margin:0;width:24px;height:24px;font-size:10px;">
-                    <i class="fas ${isPlaying ? 'fa-pause' : 'fa-play'}"></i>
-                </div>
+            <img class="sp-album-art" src="${albumArt}" alt="${album}">
+            <div class="sp-playback-icon ${isPlaying ? 'playing' : 'paused'}">
+                <i class="fas ${isPlaying ? 'fa-pause' : 'fa-play'}"></i>
             </div>
             <div class="sp-track-details">
                 <span class="sp-track-name">${track.name}</span>
                 <span class="sp-track-artist">${artist}</span>
-                <span class="sp-track-album">${album}</span>
                 <div class="sp-controls-area">
                     <div class="sp-progress-bar">
                         <div class="sp-progress-fill" style="width: ${progressPct}%"></div>
