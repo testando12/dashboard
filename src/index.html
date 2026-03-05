@@ -10,7 +10,13 @@
 </head>
 <body>
 
-    <!-- Background com textura sutil -->
+    <!-- Page Loader -->
+    <div id="page-loader">
+        <div class="loader-5">
+            <div class="loader-5-before"></div>
+            <div class="loader-5-after"></div>
+        </div>
+    </div>
     <div class="bg-texture">
         <span class="bg-text t1">RUNFIG YAN</span>
         <span class="bg-text t2">SYSTEMS</span>
@@ -387,6 +393,16 @@
     <script src="spotify.js"></script>
     <script src="calendar.js"></script>
     <script>
+    // Hide loader once everything is loaded
+    window.addEventListener('load', () => {
+        const loader = document.getElementById('page-loader');
+        if (loader) {
+            loader.classList.add('loader-hide');
+            loader.addEventListener('transitionend', () => loader.remove(), { once: true });
+        }
+    });
+
+    // Calendar expand toggle
     (function () {
         const cal = document.querySelector('.calendar-widget');
         const spotify = document.querySelector('.spotify-widget');
