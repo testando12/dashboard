@@ -15,6 +15,18 @@ let calExpandedYear = new Date().getFullYear();
 let calExpandedMonth = new Date().getMonth();
 let calSelectedDate = new Date().toISOString().split('T')[0];
 
+// ========== Local Events (localStorage) ==========
+function loadLocalEvents() {
+    try { return JSON.parse(localStorage.getItem('cal_local_events') || '[]'); }
+    catch(e) { return []; }
+}
+function saveLocalEvents(evs) {
+    localStorage.setItem('cal_local_events', JSON.stringify(evs));
+}
+function getAllEvents() {
+    return [...calLastEvents, ...loadLocalEvents()];
+}
+
 // ========== Clock (live) ==========
 function updateClock() {
     const now = new Date();
@@ -254,24 +266,31 @@ function buildEventsSection(dateStr) {
     const isToday = dateStr === now.toISOString().split('T')[0];
     const label = isToday ? 'TODAY' : `${dayNames[d.getDay()].toUpperCase()}, ${d.getDate()} ${months[d.getMonth()].toUpperCase().slice(0,3)}`;
 
-    const dayEvs = calLastEvents.filter(ev => {
+    const allEvs = getAllEvents();
+    const dayEvs = allEvs.filter(ev => {
         const s = (ev.start.dateTime || ev.start.date || '').split('T')[0];
         return s === dateStr;
+    }).sort((a,b) => {
+        const ta = a.start.dateTime || a.start.date;
+        const tb = b.start.dateTime || b.start.date;
+        return ta < tb ? -1 : ta > tb ? 1 : 0;
     });
 
     const evItems = dayEvs.length === 0
         ? '<div class="cal-exp-no-events">No activities this day</div>'
         : dayEvs.map(ev => {
+            const isLocal = !!ev._local;
             const start = ev.start.dateTime ? fmt(ev.start.dateTime) : 'All day';
             const end   = ev.end && ev.end.dateTime ? fmt(ev.end.dateTime) : '';
             const loc   = ev.location || '';
-            return `<div class="cal-exp-event-item">
+            const delBtn = isLocal ? `<button class="cal-ev-del" onclick="calDeleteLocalEvent('${ev._localId}')" title="Remove"><i class="fas fa-times"></i></button>` : '';
+            return `<div class="cal-exp-event-item${isLocal ? ' cal-ev-local' : ''}">
                 <div class="cal-exp-time-col"><span>${start}</span>${end?`<span>${end}</span>`:''}</div>
-                <div class="cal-exp-event-bar"></div>
+                <div class="cal-exp-event-bar${isLocal ? ' cal-ev-local-bar' : ''}"></div>
                 <div class="cal-exp-event-info">
                     <span class="cal-exp-event-title">${ev.summary||'(no title)'}</span>
                     ${loc?`<span class="cal-exp-event-sub">${loc}</span>`:''}
-                </div></div>`;
+                </div>${delBtn}</div>`;
         }).join('');
 
     return { label, count: dayEvs.length, evItems };
@@ -291,6 +310,89 @@ window.calSelectDay = function(dateStr) {
     section.querySelector('.cal-exp-today-label').textContent = label;
     section.querySelector('.cal-exp-today-count').textContent = `${count} ${count === 1 ? 'Activity' : 'Activities'}`;
     section.querySelector('.cal-exp-events-list').innerHTML = evItems;
+};
+
+window.calDeleteLocalEvent = function(id) {
+    const evs = loadLocalEvents().filter(e => e._localId !== id);
+    saveLocalEvents(evs);
+    window.calSelectDay(calSelectedDate);
+    // refresh dots
+    window.renderExpandedCalendar();
+};
+
+window.calOpenAddModal = function() {
+    let modal = document.getElementById('cal-add-modal');
+    if (!modal) {
+        const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        const d = new Date(calSelectedDate + 'T12:00:00');
+        modal = document.createElement('div');
+        modal.id = 'cal-add-modal';
+        modal.innerHTML = `
+            <div id="cal-modal-backdrop"></div>
+            <div id="cal-modal-sheet">
+                <div class="cal-modal-handle"></div>
+                <div class="cal-modal-title">New Event</div>
+                <div class="cal-modal-date-label">${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}</div>
+                <div class="cal-modal-field">
+                    <label>Title</label>
+                    <input id="cal-input-title" type="text" placeholder="Event title" autocomplete="off" />
+                </div>
+                <div class="cal-modal-row">
+                    <div class="cal-modal-field">
+                        <label>Start time</label>
+                        <input id="cal-input-start" type="time" value="09:00" />
+                    </div>
+                    <div class="cal-modal-field">
+                        <label>End time</label>
+                        <input id="cal-input-end" type="time" value="10:00" />
+                    </div>
+                </div>
+                <div class="cal-modal-field">
+                    <label>Location <span style="opacity:.4">(optional)</span></label>
+                    <input id="cal-input-loc" type="text" placeholder="Room, address..." autocomplete="off" />
+                </div>
+                <div class="cal-modal-actions">
+                    <button class="cal-modal-cancel" onclick="calCloseAddModal()">Cancel</button>
+                    <button class="cal-modal-save" onclick="calSaveLocalEvent()">Add Event</button>
+                </div>
+            </div>`;
+        document.body.appendChild(modal);
+        document.getElementById('cal-modal-backdrop').addEventListener('click', window.calCloseAddModal);
+    }
+    requestAnimationFrame(() => {
+        modal.classList.add('cal-modal-open');
+        setTimeout(() => document.getElementById('cal-input-title').focus(), 320);
+    });
+};
+
+window.calCloseAddModal = function() {
+    const modal = document.getElementById('cal-add-modal');
+    if (modal) {
+        modal.classList.remove('cal-modal-open');
+        setTimeout(() => modal.remove(), 350);
+    }
+};
+
+window.calSaveLocalEvent = function() {
+    const title = document.getElementById('cal-input-title').value.trim();
+    if (!title) { document.getElementById('cal-input-title').focus(); return; }
+    const startT = document.getElementById('cal-input-start').value;
+    const endT   = document.getElementById('cal-input-end').value;
+    const loc    = document.getElementById('cal-input-loc').value.trim();
+    const ev = {
+        _local: true,
+        _localId: Date.now().toString(36) + Math.random().toString(36).slice(2),
+        summary: title,
+        location: loc || undefined,
+        start: { dateTime: `${calSelectedDate}T${startT}:00` },
+        end:   { dateTime: `${calSelectedDate}T${endT}:00` }
+    };
+    const evs = loadLocalEvents();
+    evs.push(ev);
+    saveLocalEvents(evs);
+    window.calCloseAddModal();
+    window.renderExpandedCalendar();
+    setTimeout(() => window.calSelectDay(calSelectedDate), 50);
 };
 
 window.renderExpandedCalendar = function(eventsOverride) {
@@ -313,7 +415,7 @@ window.renderExpandedCalendar = function(eventsOverride) {
         const dateStr = `${calExpandedYear}-${String(calExpandedMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
         const isToday = d === todayD && calExpandedMonth === todayM && calExpandedYear === todayY;
         const isSelected = dateStr === calSelectedDate;
-        const hasEv = calLastEvents.some(ev => (ev.start.dateTime || ev.start.date || '').split('T')[0] === dateStr);
+    const hasEv = getAllEvents().some(ev => (ev.start.dateTime || ev.start.date || '').split('T')[0] === dateStr);
         const classes = [isToday ? 'cal-today-day' : '', isSelected ? 'cal-day-selected' : ''].filter(Boolean).join(' ');
         cells += `<span class="${classes}" data-date="${dateStr}">${d}${hasEv ? '<em class="cal-exp-dot"></em>' : ''}</span>`;
     }
@@ -341,6 +443,13 @@ window.renderExpandedCalendar = function(eventsOverride) {
                     <span class="cal-exp-see-all">See all ›</span>
                 </div>
                 <div class="cal-exp-events-list">${evItems}</div>
+            </div>
+            <div class="cal-exp-bottom-bar">
+                <button class="cal-bb-btn" onclick="calSelectDay('${new Date().toISOString().split('T')[0]}')"><i class="fas fa-sun"></i><span>Today</span></button>
+                <button class="cal-bb-btn"><i class="fas fa-calendar"></i><span>Calendar</span></button>
+                <button class="cal-bb-add" onclick="calOpenAddModal()"><i class="fas fa-plus"></i></button>
+                <button class="cal-bb-btn"><i class="fas fa-inbox"></i><span>Inbox</span></button>
+                <button class="cal-bb-btn"><i class="fas fa-share-alt"></i><span>Share</span></button>
             </div>
         </div>`;
 
