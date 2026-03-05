@@ -1484,56 +1484,65 @@ body {
 .crypto-widget {
     grid-column: 1;
     grid-row: 3;
-    gap: 8px;
+    gap: 6px;
+    padding: 12px 14px;
+    overflow: hidden;
 }
 
 .crypto-list {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 5px;
+    flex: 1;
 }
 
 .crypto-item {
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-size: 13px;
+    gap: 8px;
+    font-size: 12px;
 }
 
 .crypto-rank {
-    font-size: 11px;
+    font-size: 10px;
     color: rgba(255,255,255,0.3);
-    width: 14px;
+    width: 12px;
+    flex-shrink: 0;
 }
 
 .crypto-icon {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
+    font-size: 12px;
     color: #fff;
+    flex-shrink: 0;
 }
 
 .crypto-icon.btc { background: #f7931a; }
 .crypto-icon.eth { background: #627eea; }
-.crypto-icon.sol { background: linear-gradient(135deg, #9945FF, #14F195); font-size: 12px; }
+.crypto-icon.sol { background: linear-gradient(135deg, #9945FF, #14F195); font-size: 11px; }
 .crypto-icon.mco { background: #1a3c6e; }
 
 .crypto-name {
     color: rgba(255,255,255,0.85);
     flex: 1;
+    font-size: 12px;
+    line-height: 1.2;
 }
 
 .crypto-symbol {
     color: rgba(255,255,255,0.35);
-    font-size: 11px;
+    font-size: 10px;
+    margin-left: 3px;
 }
 
 .crypto-change {
-    font-size: 12px;
+    font-size: 11px;
+    flex-shrink: 0;
 }
 
 .crypto-change.positive { color: #4caf50; }
@@ -1541,14 +1550,15 @@ body {
 
 .crypto-dots {
     display: flex;
-    gap: 6px;
+    gap: 5px;
     justify-content: center;
-    padding-top: 6px;
+    padding-top: 2px;
+    flex-shrink: 0;
 }
 
 .dot {
-    width: 6px;
-    height: 6px;
+    width: 5px;
+    height: 5px;
     border-radius: 50%;
     background: rgba(255,255,255,0.15);
 }
