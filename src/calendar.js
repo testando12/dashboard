@@ -41,7 +41,7 @@ function updateDate() {
     const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
     const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
     const el = document.getElementById('cal-date');
-    if (el) el.textContent = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]}`;
+    if (el) el.innerHTML = `<span style="display:block">${days[now.getDay()]},</span><span style="display:block">${now.getDate()} ${months[now.getMonth()]}</span>`;
 }
 
 function updateWeekDays() {
