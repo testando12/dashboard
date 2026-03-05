@@ -150,9 +150,11 @@ async function fetchAndRenderEvents() {
     const endOfDay = new Date(now);
     endOfDay.setHours(23, 59, 59, 999);
 
-    // Next 7 days
+    // Next 30 days
     const nextWeek = new Date(now);
-        nextWeek.setDate(now.getDate() + 30);
+    nextWeek.setDate(now.getDate() + 30);
+
+    try {
         const response = await gapi.client.calendar.events.list({
             calendarId: 'primary',
             timeMin: now.toISOString(),
