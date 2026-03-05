@@ -442,7 +442,7 @@ body {
 .dashboard-grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 240px;
-    grid-template-rows: minmax(180px, 1.6fr) minmax(200px, 2fr) minmax(140px, 1.2fr);
+    grid-template-rows: 205px 265px 155px;
     gap: 10px;
     width: 100%;
     flex: 1;
