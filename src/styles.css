@@ -379,7 +379,7 @@ body {
 .dashboard-grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 240px;
-    grid-template-rows: 160px 230px 170px;
+    grid-template-rows: 200px 230px 160px;
     gap: 10px;
     width: 100%;
     flex: 1;
@@ -1003,6 +1003,7 @@ body {
 /* ==================== CRYPTO WIDGET ==================== */
 .crypto-widget {
     gap: 8px;
+    align-self: end;
 }
 
 .crypto-list {
@@ -1078,6 +1079,7 @@ body {
 /* ==================== GAUGE WIDGET ==================== */
 .gauge-widget {
     align-items: center;
+    align-self: end;
 }
 
 .gauge-container {
@@ -1170,6 +1172,7 @@ body {
 /* ==================== BILLS WIDGET ==================== */
 .bills-widget {
     gap: 6px;
+    align-self: end;
 }
 
 .bills-sublabel {
