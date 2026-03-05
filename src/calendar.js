@@ -13,6 +13,7 @@ let gcalAccessToken = null;
 let calLastEvents = [];
 let calExpandedYear = new Date().getFullYear();
 let calExpandedMonth = new Date().getMonth();
+let calSelectedDate = new Date().toISOString().split('T')[0];
 
 // ========== Clock (live) ==========
 function updateClock() {
@@ -139,16 +140,14 @@ async function fetchAndRenderEvents() {
 
     // Next 7 days
     const nextWeek = new Date(now);
-    nextWeek.setDate(now.getDate() + 7);
-
-    try {
+        nextWeek.setDate(now.getDate() + 30);
         const response = await gapi.client.calendar.events.list({
             calendarId: 'primary',
             timeMin: now.toISOString(),
             timeMax: nextWeek.toISOString(),
             showDeleted: false,
             singleEvents: true,
-            maxResults: 10,
+            maxResults: 50,
             orderBy: 'startTime'
         });
 
@@ -246,12 +245,61 @@ function renderCalendarLogin() {
 }
 
 // ========== Expanded Calendar View ==========
+function buildEventsSection(dateStr) {
+    const fmt = dt => new Date(dt).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true});
+    const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const d = new Date(dateStr + 'T12:00:00');
+    const now = new Date();
+    const isToday = dateStr === now.toISOString().split('T')[0];
+    const label = isToday ? 'TODAY' : `${dayNames[d.getDay()].toUpperCase()}, ${d.getDate()} ${months[d.getMonth()].toUpperCase().slice(0,3)}`;
+
+    const dayEvs = calLastEvents.filter(ev => {
+        const s = (ev.start.dateTime || ev.start.date || '').split('T')[0];
+        return s === dateStr;
+    });
+
+    const evItems = dayEvs.length === 0
+        ? '<div class="cal-exp-no-events">No activities this day</div>'
+        : dayEvs.map(ev => {
+            const start = ev.start.dateTime ? fmt(ev.start.dateTime) : 'All day';
+            const end   = ev.end && ev.end.dateTime ? fmt(ev.end.dateTime) : '';
+            const loc   = ev.location || '';
+            return `<div class="cal-exp-event-item">
+                <div class="cal-exp-time-col"><span>${start}</span>${end?`<span>${end}</span>`:''}</div>
+                <div class="cal-exp-event-bar"></div>
+                <div class="cal-exp-event-info">
+                    <span class="cal-exp-event-title">${ev.summary||'(no title)'}</span>
+                    ${loc?`<span class="cal-exp-event-sub">${loc}</span>`:''}
+                </div></div>`;
+        }).join('');
+
+    return { label, count: dayEvs.length, evItems };
+}
+
+window.calSelectDay = function(dateStr) {
+    calSelectedDate = dateStr;
+    const grid = document.querySelector('.cal-exp-grid');
+    if (grid) {
+        grid.querySelectorAll('span.cal-day-selected').forEach(s => s.classList.remove('cal-day-selected'));
+        const target = grid.querySelector(`[data-date="${dateStr}"]`);
+        if (target) target.classList.add('cal-day-selected');
+    }
+    const section = document.querySelector('.cal-exp-today-section');
+    if (!section) return;
+    const { label, count, evItems } = buildEventsSection(dateStr);
+    section.querySelector('.cal-exp-today-label').textContent = label;
+    section.querySelector('.cal-exp-today-count').textContent = `${count} ${count === 1 ? 'Activity' : 'Activities'}`;
+    section.querySelector('.cal-exp-events-list').innerHTML = evItems;
+};
+
 window.renderExpandedCalendar = function(eventsOverride) {
     if (eventsOverride) calLastEvents = eventsOverride;
     const monthNames = ['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE',
         'JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
     const now = new Date();
     const todayD = now.getDate(), todayM = now.getMonth(), todayY = now.getFullYear();
+    if (!calSelectedDate) calSelectedDate = now.toISOString().split('T')[0];
 
     const firstDow = new Date(calExpandedYear, calExpandedMonth, 1).getDay();
     const daysInMonth = new Date(calExpandedYear, calExpandedMonth + 1, 0).getDate();
@@ -264,33 +312,16 @@ window.renderExpandedCalendar = function(eventsOverride) {
     for (let d = 1; d <= daysInMonth; d++) {
         const dateStr = `${calExpandedYear}-${String(calExpandedMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
         const isToday = d === todayD && calExpandedMonth === todayM && calExpandedYear === todayY;
+        const isSelected = dateStr === calSelectedDate;
         const hasEv = calLastEvents.some(ev => (ev.start.dateTime || ev.start.date || '').split('T')[0] === dateStr);
-        cells += `<span class="${isToday ? 'cal-today-day' : ''}">${d}${hasEv ? '<em class="cal-exp-dot"></em>' : ''}</span>`;
+        const classes = [isToday ? 'cal-today-day' : '', isSelected ? 'cal-day-selected' : ''].filter(Boolean).join(' ');
+        cells += `<span class="${classes}" data-date="${dateStr}">${d}${hasEv ? '<em class="cal-exp-dot"></em>' : ''}</span>`;
     }
     const trailing = 7 - ((firstDow + daysInMonth) % 7 || 7);
     if (trailing < 7) for (let d = 1; d <= trailing; d++)
         cells += `<span class="cal-other-month">${d}</span>`;
 
-    const todayEvs = calLastEvents.filter(ev => {
-        const s = ev.start.dateTime ? new Date(ev.start.dateTime) : new Date(ev.start.date);
-        return s.toDateString() === now.toDateString();
-    });
-
-    const fmt = dt => new Date(dt).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true});
-    const evItems = todayEvs.length === 0
-        ? '<div class="cal-exp-no-events">No activities today</div>'
-        : todayEvs.map(ev => {
-            const start = ev.start.dateTime ? fmt(ev.start.dateTime) : 'All day';
-            const end   = ev.end && ev.end.dateTime ? fmt(ev.end.dateTime) : '';
-            const loc   = ev.location || '';
-            return `<div class="cal-exp-event-item">
-                <div class="cal-exp-time-col"><span>${start}</span>${end?`<span>${end}</span>`:''}</div>
-                <div class="cal-exp-event-bar"></div>
-                <div class="cal-exp-event-info">
-                    <span class="cal-exp-event-title">${ev.summary||'(no title)'}</span>
-                    ${loc?`<span class="cal-exp-event-sub">${loc}</span>`:''}
-                </div></div>`;
-        }).join('');
+    const { label: selLabel, count: selCount, evItems } = buildEventsSection(calSelectedDate);
 
     const widget = document.querySelector('.calendar-widget');
     widget.innerHTML = `
@@ -305,13 +336,23 @@ window.renderExpandedCalendar = function(eventsOverride) {
             <div class="cal-exp-grid">${cells}</div>
             <div class="cal-exp-today-section">
                 <div class="cal-exp-today-header">
-                    <span class="cal-exp-today-label">TODAY</span>
-                    <span class="cal-exp-today-count">${todayEvs.length} Activities</span>
+                    <span class="cal-exp-today-label">${selLabel}</span>
+                    <span class="cal-exp-today-count">${selCount} ${selCount === 1 ? 'Activity' : 'Activities'}</span>
                     <span class="cal-exp-see-all">See all ›</span>
                 </div>
                 <div class="cal-exp-events-list">${evItems}</div>
             </div>
         </div>`;
+
+    // Click delegation on grid days
+    const grid = widget.querySelector('.cal-exp-grid');
+    if (grid) {
+        grid.addEventListener('click', (e) => {
+            const span = e.target.closest('[data-date]');
+            if (!span || span.classList.contains('cal-other-month')) return;
+            window.calSelectDay(span.dataset.date);
+        });
+    }
 };
 
 window.calNavMonth = function(dir) {
@@ -324,6 +365,7 @@ window.calNavMonth = function(dir) {
 window.restoreCompactCalendar = function() {
     calExpandedYear = new Date().getFullYear();
     calExpandedMonth = new Date().getMonth();
+    calSelectedDate = new Date().toISOString().split('T')[0];
     const widget = document.querySelector('.calendar-widget');
     widget.innerHTML = `
         <div class="widget-header">

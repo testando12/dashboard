@@ -700,6 +700,16 @@ body {
     color: #fff;
     font-weight: 700;
 }
+
+.cal-exp-grid .cal-day-selected:not(.cal-today-day) {
+    background: rgba(255,255,255,0.18);
+    color: #fff;
+    font-weight: 600;
+}
+
+.cal-exp-grid span[data-date]:not(.cal-other-month) {
+    cursor: pointer;
+}
 .cal-exp-dot {
     position: absolute;
     bottom: 2px;
