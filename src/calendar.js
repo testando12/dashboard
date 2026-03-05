@@ -10,6 +10,9 @@ const GCAL_CONFIG = {
 
 let gcalTokenClient = null;
 let gcalAccessToken = null;
+let calLastEvents = [];
+let calExpandedYear = new Date().getFullYear();
+let calExpandedMonth = new Date().getMonth();
 
 // ========== Clock (live) ==========
 function updateClock() {
@@ -150,8 +153,14 @@ async function fetchAndRenderEvents() {
         });
 
         const events = response.result.items || [];
-        renderEvents(events);
-        markEventDots(events);
+        calLastEvents = events;
+        const isExpanded = document.querySelector('.calendar-widget.cal-expanded');
+        if (isExpanded) {
+            window.renderExpandedCalendar(events);
+        } else {
+            renderEvents(events);
+            markEventDots(events);
+        }
     } catch (err) {
         console.error('Calendar fetch error:', err);
         if (err.status === 401) {
@@ -235,6 +244,104 @@ function renderCalendarLogin() {
         </div>
     `;
 }
+
+// ========== Expanded Calendar View ==========
+window.renderExpandedCalendar = function(eventsOverride) {
+    if (eventsOverride) calLastEvents = eventsOverride;
+    const monthNames = ['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE',
+        'JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
+    const now = new Date();
+    const todayD = now.getDate(), todayM = now.getMonth(), todayY = now.getFullYear();
+
+    const firstDow = new Date(calExpandedYear, calExpandedMonth, 1).getDay();
+    const daysInMonth = new Date(calExpandedYear, calExpandedMonth + 1, 0).getDate();
+    const daysInPrev = new Date(calExpandedYear, calExpandedMonth, 0).getDate();
+
+    let cells = '';
+    for (let i = firstDow - 1; i >= 0; i--)
+        cells += `<span class="cal-other-month">${daysInPrev - i}</span>`;
+
+    for (let d = 1; d <= daysInMonth; d++) {
+        const dateStr = `${calExpandedYear}-${String(calExpandedMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        const isToday = d === todayD && calExpandedMonth === todayM && calExpandedYear === todayY;
+        const hasEv = calLastEvents.some(ev => (ev.start.dateTime || ev.start.date || '').split('T')[0] === dateStr);
+        cells += `<span class="${isToday ? 'cal-today-day' : ''}">${d}${hasEv ? '<em class="cal-exp-dot"></em>' : ''}</span>`;
+    }
+    const trailing = 7 - ((firstDow + daysInMonth) % 7 || 7);
+    if (trailing < 7) for (let d = 1; d <= trailing; d++)
+        cells += `<span class="cal-other-month">${d}</span>`;
+
+    const todayEvs = calLastEvents.filter(ev => {
+        const s = ev.start.dateTime ? new Date(ev.start.dateTime) : new Date(ev.start.date);
+        return s.toDateString() === now.toDateString();
+    });
+
+    const fmt = dt => new Date(dt).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true});
+    const evItems = todayEvs.length === 0
+        ? '<div class="cal-exp-no-events">No activities today</div>'
+        : todayEvs.map(ev => {
+            const start = ev.start.dateTime ? fmt(ev.start.dateTime) : 'All day';
+            const end   = ev.end && ev.end.dateTime ? fmt(ev.end.dateTime) : '';
+            const loc   = ev.location || '';
+            return `<div class="cal-exp-event-item">
+                <div class="cal-exp-time-col"><span>${start}</span>${end?`<span>${end}</span>`:''}</div>
+                <div class="cal-exp-event-bar"></div>
+                <div class="cal-exp-event-info">
+                    <span class="cal-exp-event-title">${ev.summary||'(no title)'}</span>
+                    ${loc?`<span class="cal-exp-event-sub">${loc}</span>`:''}
+                </div></div>`;
+        }).join('');
+
+    const widget = document.querySelector('.calendar-widget');
+    widget.innerHTML = `
+        <div class="cal-exp-wrap">
+            <div class="cal-exp-header">
+                <button class="cal-nav-btn" onclick="calNavMonth(-1)">&#8249;</button>
+                <span class="cal-exp-month-title">${monthNames[calExpandedMonth]} ${calExpandedYear}</span>
+                <button class="cal-nav-btn" onclick="calNavMonth(1)">&#8250;</button>
+                <i class="fas fa-times cal-exp-close" style="margin-left:auto;cursor:pointer;color:rgba(255,255,255,0.4);font-size:13px;"></i>
+            </div>
+            <div class="cal-exp-weekdays"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+            <div class="cal-exp-grid">${cells}</div>
+            <div class="cal-exp-today-section">
+                <div class="cal-exp-today-header">
+                    <span class="cal-exp-today-label">TODAY</span>
+                    <span class="cal-exp-today-count">${todayEvs.length} Activities</span>
+                    <span class="cal-exp-see-all">See all ›</span>
+                </div>
+                <div class="cal-exp-events-list">${evItems}</div>
+            </div>
+        </div>`;
+};
+
+window.calNavMonth = function(dir) {
+    calExpandedMonth += dir;
+    if (calExpandedMonth < 0)  { calExpandedMonth = 11; calExpandedYear--; }
+    if (calExpandedMonth > 11) { calExpandedMonth = 0;  calExpandedYear++; }
+    window.renderExpandedCalendar();
+};
+
+window.restoreCompactCalendar = function() {
+    calExpandedYear = new Date().getFullYear();
+    calExpandedMonth = new Date().getMonth();
+    const widget = document.querySelector('.calendar-widget');
+    widget.innerHTML = `
+        <div class="widget-header">
+            <span class="widget-title">Calendar</span>
+            <i class="fas fa-plus widget-link"></i>
+        </div>
+        <div id="cal-time" class="calendar-time">--:--</div>
+        <div id="cal-date" class="calendar-date">...</div>
+        <div class="calendar-week">
+            <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+        </div>
+        <div id="cal-days" class="calendar-days"></div>
+        <div id="cal-events"></div>`;
+    updateClock(); updateDate(); updateWeekDays();
+    if (calLastEvents.length > 0) { renderEvents(calLastEvents); markEventDots(calLastEvents); }
+    else if (gcalAccessToken || getStoredToken()) fetchAndRenderEvents();
+    else renderCalendarLogin();
+};
 
 // ========== Init ==========
 async function initCalendarWidget() {

@@ -563,8 +563,174 @@ body {
     display: none;
 }
 
-.calendar-widget.cal-expanded .widget-link {
-    transform: rotate(45deg);
+/* ==================== EXPANDED CALENDAR CONTENT ==================== */
+.cal-exp-wrap {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 10px;
+}
+
+.cal-exp-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.cal-exp-month-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.9);
+    letter-spacing: 0.6px;
+    flex: 1;
+    text-align: center;
+}
+
+.cal-nav-btn {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.45);
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    padding: 0 2px;
+    border-radius: 4px;
+    transition: color 0.2s;
+}
+.cal-nav-btn:hover { color: #fff; }
+
+.cal-exp-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+.cal-exp-weekdays span {
+    font-size: 10px;
+    color: rgba(255,255,255,0.3);
+    text-align: center;
+    font-weight: 600;
+}
+
+.cal-exp-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px 0;
+}
+.cal-exp-grid span {
+    font-size: 11px;
+    color: rgba(255,255,255,0.7);
+    text-align: center;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    flex-direction: column;
+    gap: 1px;
+    transition: background 0.15s;
+}
+.cal-exp-grid span:hover:not(.cal-today-day) { background: rgba(255,255,255,0.08); }
+.cal-exp-grid .cal-other-month { color: rgba(255,255,255,0.18); }
+.cal-exp-grid .cal-today-day {
+    background: rgba(180,120,60,0.75);
+    color: #fff;
+    font-weight: 700;
+}
+.cal-exp-dot {
+    position: absolute;
+    bottom: 2px;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.65);
+    display: block;
+    font-style: normal;
+}
+
+.cal-exp-today-section {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 10px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.cal-exp-today-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+.cal-exp-today-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: rgba(200,140,70,0.95);
+    letter-spacing: 0.6px;
+}
+.cal-exp-today-count {
+    font-size: 11px;
+    color: rgba(255,255,255,0.55);
+    flex: 1;
+}
+.cal-exp-see-all {
+    font-size: 10px;
+    color: rgba(200,140,70,0.75);
+    cursor: pointer;
+}
+.cal-exp-events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+.cal-exp-events-list::-webkit-scrollbar { display: none; }
+.cal-exp-event-item {
+    display: flex;
+    align-items: stretch;
+    gap: 8px;
+}
+.cal-exp-time-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-size: 9px;
+    color: rgba(255,255,255,0.35);
+    min-width: 44px;
+    gap: 2px;
+    padding-top: 3px;
+    line-height: 1.3;
+}
+.cal-exp-event-bar {
+    width: 2.5px;
+    background: linear-gradient(180deg, rgba(200,140,70,0.9), rgba(200,140,70,0.3));
+    border-radius: 2px;
+    min-height: 34px;
+    flex-shrink: 0;
+}
+.cal-exp-event-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 1;
+    padding-top: 2px;
+}
+.cal-exp-event-title {
+    font-size: 12px;
+    color: rgba(255,255,255,0.88);
+    font-weight: 500;
+    line-height: 1.2;
+}
+.cal-exp-event-sub {
+    font-size: 10px;
+    color: rgba(255,255,255,0.38);
+}
+.cal-exp-no-events {
+    font-size: 11px;
+    color: rgba(255,255,255,0.28);
+    text-align: center;
+    padding: 16px 0;
 }
 
 .calendar-widget.cal-expanding {
