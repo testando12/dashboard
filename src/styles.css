@@ -528,85 +528,119 @@ body {
     grid-row: 1;
     background: rgba(180, 120, 60, 0.25);
     border: 1px solid rgba(180, 120, 60, 0.3);
-    gap: 8px;
+    gap: 5px;
     overflow: hidden;
+    padding: 14px 16px;
 }
 
 .calendar-time {
-    font-size: 42px;
+    font-size: 40px;
     font-weight: 700;
     color: #fff;
     line-height: 1;
+    letter-spacing: -0.5px;
+    flex-shrink: 0;
 }
 
 .calendar-date {
-    font-size: 13px;
-    color: rgba(255,255,255,0.6);
-    margin-bottom: 8px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 2px;
+    flex-shrink: 0;
 }
 
+/* Week labels row */
 .calendar-week {
     display: flex;
-    justify-content: space-between;
-    gap: 2px;
+    margin-bottom: 1px;
 }
 
 .calendar-week span {
+    flex: 1;
     font-size: 10px;
-    color: rgba(255,255,255,0.35);
+    color: rgba(255,255,255,0.3);
     text-align: center;
-    width: 28px;
 }
 
+/* Days row (cells) */
 .calendar-days {
     display: flex;
-    justify-content: space-between;
-    gap: 2px;
+    align-items: flex-start;
 }
 
-.calendar-days span {
-    font-size: 12px;
-    color: rgba(255,255,255,0.6);
-    text-align: center;
-    width: 28px;
-    height: 28px;
+/* Each day cell: number circle + optional dot below */
+.cal-day-cell {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    cursor: default;
+}
+
+.cal-day-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 11px;
+    color: rgba(255,255,255,0.65);
+    font-weight: 500;
+}
+
+.cal-day-cell.active .cal-day-num {
+    background: #fff;
+    color: #1a1a1a;
+    font-weight: 700;
+}
+
+/* Event dot below the day number */
+.event-dot {
+    width: 4px;
+    height: 4px;
     border-radius: 50%;
+    background: #ef5350;
+    flex-shrink: 0;
 }
 
-.calendar-days span.active {
-    background: rgba(255,255,255,0.2);
-    color: #fff;
-    font-weight: 600;
-}
-
+/* Next event card */
 .calendar-event {
     margin-top: auto;
-    background: rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.22);
     border-radius: 10px;
-    padding: 10px 12px;
+    padding: 8px 10px;
+    flex-shrink: 0;
 }
 
 .event-label {
     font-size: 10px;
-    color: rgba(255,255,255,0.35);
+    color: rgba(255,255,255,0.3);
     display: block;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
 }
 
 .event-detail {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 8px;
     font-size: 12px;
-    color: rgba(255,255,255,0.75);
+    color: rgba(255,255,255,0.8);
+}
+
+.event-name {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .event-time {
-    font-size: 12px;
-    color: rgba(255,255,255,0.5);
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+    flex-shrink: 0;
 }
 
 /* ==================== CALENDAR EXPAND ANIMATION ==================== */

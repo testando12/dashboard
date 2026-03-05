@@ -60,14 +60,22 @@ function updateWeekDays() {
     for (let i = 0; i < 7; i++) {
         const d = new Date(sunday);
         d.setDate(sunday.getDate() + i);
-        const span = document.createElement('span');
-        span.textContent = d.getDate();
+
+        // Outer cell
+        const cell = document.createElement('span');
+        cell.className = 'cal-day-cell';
+        cell.dataset.date = d.toISOString().split('T')[0];
         if (d.getDate() === today && d.getMonth() === now.getMonth()) {
-            span.classList.add('active');
+            cell.classList.add('active');
         }
-        // Add dot if there's an event (populated later)
-        span.dataset.date = d.toISOString().split('T')[0];
-        daysEl.appendChild(span);
+
+        // Inner number circle
+        const num = document.createElement('span');
+        num.className = 'cal-day-num';
+        num.textContent = d.getDate();
+        cell.appendChild(num);
+
+        daysEl.appendChild(cell);
     }
 }
 
@@ -210,17 +218,17 @@ function renderEvents(events) {
         return;
     }
 
-    // Show next 2 events
-    const toShow = events.slice(0, 2);
-    container.innerHTML = toShow.map(ev => `
+    // Show only the next 1 event
+    const ev = events[0];
+    container.innerHTML = `
         <div class="calendar-event">
-            <span class="event-label">${isToday(ev) ? 'Today' : 'Next event'}</span>
+            <span class="event-label">${isToday(ev) ? 'Hoje' : 'Próximo evento'}</span>
             <div class="event-detail">
-                <span>${ev.summary || '(no title)'}</span>
+                <span class="event-name">${ev.summary || '(sem título)'}</span>
                 <span class="event-time">${formatEventTime(ev)}</span>
             </div>
         </div>
-    `).join('');
+    `;
 }
 
 function markEventDots(events) {
@@ -230,11 +238,11 @@ function markEventDots(events) {
         const dateStr = ev.start.dateTime
             ? ev.start.dateTime.split('T')[0]
             : ev.start.date;
-        const span = daysEl.querySelector(`[data-date="${dateStr}"]`);
-        if (span && !span.querySelector('.event-dot')) {
+        const cell = daysEl.querySelector(`[data-date="${dateStr}"]`);
+        if (cell && !cell.querySelector('.event-dot')) {
             const dot = document.createElement('span');
             dot.className = 'event-dot';
-            span.appendChild(dot);
+            cell.appendChild(dot);  // appends below .cal-day-num inside the flex-column cell
         }
     });
 }
