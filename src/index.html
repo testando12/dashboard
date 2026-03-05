@@ -185,27 +185,19 @@
                     </div>
                 </div>
 
-                <!-- Calendar widget (spans 2 rows) -->
+                <!-- Calendar widget -->
                 <div class="widget-card calendar-widget">
                     <div class="widget-header">
                         <span class="widget-title">Calendar</span>
                         <i class="fas fa-plus widget-link"></i>
                     </div>
-                    <div class="calendar-time">18:26</div>
-                    <div class="calendar-date">Sunday, 23 May</div>
+                    <div id="cal-time" class="calendar-time">--:--</div>
+                    <div id="cal-date" class="calendar-date">...</div>
                     <div class="calendar-week">
                         <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
                     </div>
-                    <div class="calendar-days">
-                        <span>19</span><span class="active">20</span><span>21</span><span>22</span><span>23</span><span>24</span><span>25</span>
-                    </div>
-                    <div class="calendar-event">
-                        <span class="event-label">Next event</span>
-                        <div class="event-detail">
-                            <span>Design Sprint / quan x yuki</span>
-                            <span class="event-time">20:00</span>
-                        </div>
-                    </div>
+                    <div id="cal-days" class="calendar-days"></div>
+                    <div id="cal-events"></div>
                 </div>
 
                 <!-- S&P 500 (spans 2 cols) -->
@@ -393,5 +385,6 @@
     </div>
 
     <script src="spotify.js"></script>
+    <script src="calendar.js"></script>
 </body>
 </html>
