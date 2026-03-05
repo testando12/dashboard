@@ -442,7 +442,7 @@ body {
 .dashboard-grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 240px;
-    grid-template-rows: 150px 280px 150px;
+    grid-template-rows: minmax(120px, 1fr) minmax(200px, 2fr) minmax(140px, 1.2fr);
     gap: 10px;
     width: 100%;
     flex: 1;
@@ -485,7 +485,7 @@ body {
 }
 
 .widget-big-value {
-    font-size: 36px;
+    font-size: 32px;
     font-weight: 700;
     color: #fff;
     line-height: 1.1;
@@ -1863,13 +1863,20 @@ body {
     grid-column: 2;
     grid-row: 3;
     align-items: center;
+    padding: 12px 14px;
+    gap: 4px;
+    overflow: hidden;
 }
 
 .gauge-container {
     position: relative;
-    width: 140px;
-    height: 80px;
-    margin: 8px auto;
+    width: 120px;
+    height: 65px;
+    margin: 4px auto;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .gauge {
@@ -1879,9 +1886,9 @@ body {
 }
 
 .gauge-bg {
-    width: 140px;
-    height: 70px;
-    border-radius: 70px 70px 0 0;
+    width: 120px;
+    height: 60px;
+    border-radius: 60px 60px 0 0;
     background: conic-gradient(
         from 180deg at 50% 100%,
         #ef5350 0deg,
@@ -1900,10 +1907,10 @@ body {
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 100px;
-    height: 50px;
+    width: 84px;
+    height: 42px;
     background: rgba(255,255,255,0.06);
-    border-radius: 50px 50px 0 0;
+    border-radius: 42px 42px 0 0;
 }
 
 .gauge-needle {
@@ -1911,7 +1918,7 @@ body {
     bottom: 0;
     left: 50%;
     width: 2px;
-    height: 55px;
+    height: 48px;
     background: #fff;
     transform-origin: bottom center;
     transform: translateX(-50%) rotate(50deg);
@@ -1927,7 +1934,7 @@ body {
 }
 
 .gauge-value {
-    font-size: 32px;
+    font-size: 26px;
     font-weight: 700;
     color: #fff;
     display: block;
@@ -1956,7 +1963,9 @@ body {
 .bills-widget {
     grid-column: 3;
     grid-row: 3;
-    gap: 6px;
+    gap: 4px;
+    padding: 12px 14px;
+    overflow: hidden;
 }
 
 .bills-sublabel {
@@ -1967,14 +1976,15 @@ body {
 .bills-list {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 5px;
+    flex: 1;
 }
 
 .bill-item {
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-size: 13px;
+    gap: 8px;
+    font-size: 12px;
     color: rgba(255,255,255,0.7);
 }
 
@@ -1996,8 +2006,9 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-top: auto;
-    padding-top: 8px;
+    padding-top: 4px;
     border-top: 1px solid rgba(255,255,255,0.06);
+    flex-shrink: 0;
 }
 
 /* ==================== SCROLL HIDDEN ==================== */
