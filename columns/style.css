@@ -1,0 +1,153 @@
+/* © 2025 by Unleashed Design (https://codepen.io/Unleashed-Design/) */
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
+:root {
+    --image-1: url('https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=400&h=400&fit=crop');
+    --image-2: url('https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=400&h=400&fit=crop');
+    --image-3: url('https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=400&h=400&fit=crop');
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #0c1016;
+    overflow: hidden;
+    font-family: 'Roboto', sans-serif;
+    color: #ffffff;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    gap: 0.4rem;
+    width: 90%;
+    max-width: 50rem;
+    height: 22rem;
+}
+
+.container .column {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    width: 100%;
+    align-items: center;
+}
+
+.container .column .item {
+    width: 100%;
+    border-radius: 0.4rem;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    background-image: var(--image-1);
+    animation: bg 6s infinite ease-in-out;
+}
+
+/* Column 1 - single short */
+.container .column-1 {
+    justify-content: flex-end;
+}
+.container .column-1 .item-1 {
+    flex: 0 0 55%;
+    animation-delay: 0s;
+}
+
+/* Column 2 - two items */
+.container .column-2 .item-1 {
+    flex: 1;
+    animation-delay: 0.15s;
+}
+.container .column-2 .item-2 {
+    flex: 0.6;
+    animation-delay: 0.3s;
+}
+
+/* Column 3 - two items */
+.container .column-3 .item-1 {
+    flex: 0.5;
+    animation-delay: 0.1s;
+}
+.container .column-3 .item-2 {
+    flex: 1;
+    animation-delay: 0.25s;
+}
+
+/* Column 4 - two items, tall */
+.container .column-4 .item-1 {
+    flex: 1.2;
+    animation-delay: 0.2s;
+}
+.container .column-4 .item-2 {
+    flex: 0.8;
+    animation-delay: 0.35s;
+}
+
+/* Column 5 - single full */
+.container .column-5 .item-1 {
+    flex: 1;
+    animation-delay: 0.05s;
+}
+
+/* Column 6 - two items */
+.container .column-6 .item-1 {
+    flex: 0.8;
+    animation-delay: 0.18s;
+}
+.container .column-6 .item-2 {
+    flex: 1.2;
+    animation-delay: 0.32s;
+}
+
+/* Column 7 - two items */
+.container .column-7 .item-1 {
+    flex: 1;
+    animation-delay: 0.12s;
+}
+.container .column-7 .item-2 {
+    flex: 0.5;
+    animation-delay: 0.28s;
+}
+
+/* Column 8 - two items */
+.container .column-8 .item-1 {
+    flex: 0.6;
+    animation-delay: 0.22s;
+}
+.container .column-8 .item-2 {
+    flex: 1;
+    animation-delay: 0.4s;
+}
+
+/* Column 9 - single short */
+.container .column-9 {
+    justify-content: flex-start;
+}
+.container .column-9 .item-1 {
+    flex: 0 0 55%;
+    animation-delay: 0.08s;
+}
+
+/* Keyframes */
+@keyframes bg {
+    0%, 30% {
+        background-image: var(--image-1);
+    }
+    33%, 63% {
+        background-image: var(--image-2);
+    }
+    66%, 96% {
+        background-image: var(--image-3);
+    }
+    100% {
+        background-image: var(--image-1);
+    }
+}

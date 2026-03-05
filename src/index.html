@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard UI</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Background com textura sutil -->
+    <div class="bg-texture">
+        <span class="bg-text t1">RUNFIG YAN</span>
+        <span class="bg-text t2">SYSTEMS</span>
+        <span class="bg-text t3">WORKFLOW</span>
+    </div>
+
+    <!-- Container principal flutuante -->
+    <div class="app-container">
+
+        <!-- Barra lateral fina com ícones -->
+        <div class="icon-sidebar">
+            <div class="icon-sidebar-top">
+                <div class="icon-item active"><i class="fas fa-times"></i></div>
+                <div class="icon-item"><i class="fas fa-pen"></i></div>
+                <div class="icon-item"><i class="fas fa-home"></i></div>
+                <div class="icon-item"><i class="fas fa-comment-dots"></i></div>
+                <div class="icon-item"><i class="fas fa-thumbtack"></i></div>
+                <div class="icon-item"><i class="fas fa-share-alt"></i></div>
+                <div class="icon-item"><i class="fas fa-trash"></i></div>
+                <div class="icon-item"><i class="fas fa-chart-bar"></i></div>
+            </div>
+            <div class="icon-sidebar-bottom">
+                <div class="icon-item"><i class="fas fa-cog"></i></div>
+            </div>
+        </div>
+
+        <!-- Painel lateral expandido -->
+        <div class="sidebar-panel">
+            <!-- Perfil do usuário -->
+            <div class="user-profile">
+                <div class="avatar">
+                    <img src="https://i.pravatar.cc/40?img=12" alt="Avatar">
+                </div>
+                <div class="user-info">
+                    <span class="user-name">John Doe <i class="fas fa-chevron-down"></i></span>
+                    <span class="user-email">customerpop@gmail.com</span>
+                </div>
+            </div>
+
+            <!-- Seção Projetos -->
+            <div class="sidebar-section">
+                <span class="section-label">Projects</span>
+                <ul class="menu-list">
+                    <li class="menu-item active">
+                        <i class="fas fa-th-large"></i> Dashboard
+                        <span class="badge">0</span>
+                    </li>
+                    <li class="menu-item">
+                        <i class="fas fa-book"></i> Library
+                    </li>
+                    <li class="menu-item">
+                        <i class="fas fa-share-alt"></i> Shared Projects
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Seção Status -->
+            <div class="sidebar-section">
+                <span class="section-label">Status</span>
+                <ul class="menu-list">
+                    <li class="menu-item">
+                        <i class="fas fa-circle-dot"></i> New
+                        <span class="badge">3</span>
+                    </li>
+                    <li class="menu-item">
+                        <i class="fas fa-sync-alt"></i> Updates
+                        <span class="badge">2</span>
+                    </li>
+                    <li class="menu-item">
+                        <i class="fas fa-users"></i> Team Review
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Seção Histórico -->
+            <div class="sidebar-section">
+                <span class="section-label">History</span>
+                <ul class="menu-list">
+                    <li class="menu-item">
+                        <i class="fas fa-clock"></i> Recently Edited
+                    </li>
+                    <li class="menu-item">
+                        <i class="fas fa-archive"></i> Archive
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Seção Documentos -->
+            <div class="sidebar-section">
+                <div class="section-header">
+                    <span class="section-label">Documents</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search">
+                </div>
+                <div class="document-tree">
+                    <div class="tree-item parent">
+                        <div class="tree-row">
+                            <i class="fas fa-folder"></i> System Management's
+                            <span class="tree-count">12</span>
+                        </div>
+                        <div class="tree-children">
+                            <div class="tree-item parent">
+                                <div class="tree-row">
+                                    <i class="fas fa-folder"></i> 2025 Update's
+                                    <span class="tree-count">2</span>
+                                </div>
+                                <div class="tree-children">
+                                    <div class="tree-item highlight-green">
+                                        <i class="fas fa-file-alt"></i> Hiring Process
+                                        <span class="tree-count">4</span>
+                                    </div>
+                                    <div class="tree-item highlight-yellow">
+                                        <i class="fas fa-file-alt"></i> Billing Process
+                                    </div>
+                                    <div class="tree-item">
+                                        <i class="fas fa-file-alt"></i> Fundamentals
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tree-item">
+                                <div class="tree-row">
+                                    <i class="fas fa-folder"></i> Off Grid Servers
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Área principal (painel separado) -->
+        <div class="main-content dark-dash">
+            <div class="dashboard-grid">
+
+                <!-- Row 1: 3 stat cards -->
+                <div class="widget-card">
+                    <div class="widget-header">
+                        <span class="widget-title">Trust Wallet balance</span>
+                        <i class="fas fa-external-link-alt widget-link"></i>
+                    </div>
+                    <div class="widget-big-value">814.73 <span class="widget-unit">ETH</span></div>
+                    <div class="widget-footer">
+                        <span class="widget-sub">Last 24 hours</span>
+                        <span class="widget-change positive">+15.42 ETH</span>
+                    </div>
+                </div>
+
+                <div class="widget-card">
+                    <div class="widget-header">
+                        <span class="widget-title">Grumroad</span>
+                        <i class="fas fa-external-link-alt widget-link"></i>
+                    </div>
+                    <div class="widget-big-value">9,327 <span class="widget-unit">sales</span></div>
+                    <div class="widget-footer">
+                        <span class="widget-sub">Total Revenue</span>
+                        <span class="widget-change">$57,932</span>
+                    </div>
+                </div>
+
+                <div class="widget-card">
+                    <div class="widget-header">
+                        <span class="widget-title">Screen time</span>
+                        <i class="fas fa-external-link-alt widget-link"></i>
+                    </div>
+                    <div class="widget-big-value">5.7 <span class="widget-unit">hours</span></div>
+                    <div class="widget-footer">
+                        <span class="widget-sub">Last week</span>
+                        <span class="widget-change positive">+48%</span>
+                    </div>
+                </div>
+
+                <!-- Calendar widget (spans 2 rows) -->
+                <div class="widget-card calendar-widget">
+                    <div class="widget-header">
+                        <span class="widget-title">Calendar</span>
+                        <i class="fas fa-plus widget-link"></i>
+                    </div>
+                    <div class="calendar-time">18:26</div>
+                    <div class="calendar-date">Sunday, 23 May</div>
+                    <div class="calendar-week">
+                        <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+                    </div>
+                    <div class="calendar-days">
+                        <span>19</span><span class="active">20</span><span>21</span><span>22</span><span>23</span><span>24</span><span>25</span>
+                    </div>
+                    <div class="calendar-event">
+                        <span class="event-label">Next event</span>
+                        <div class="event-detail">
+                            <span>Design Sprint / quan x yuki</span>
+                            <span class="event-time">20:00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- S&P 500 (spans 2 cols) -->
+                <div class="widget-card sp500-widget">
+                    <div class="widget-header">
+                        <span class="widget-title">S&P 500</span>
+                        <div class="chart-tabs">
+                            <span class="chart-tab">1D</span>
+                            <span class="chart-tab">1M</span>
+                            <span class="chart-tab active">YTD</span>
+                            <span class="chart-tab">1Y</span>
+                            <span class="chart-tab">5Y</span>
+                            <span class="chart-tab">Max</span>
+                        </div>
+                    </div>
+                    <div class="sp500-value">5,222.68 <span class="sp500-change">+479.85 (10.12%) year to date</span></div>
+                    <div class="chart-area">
+                        <svg viewBox="0 0 500 120" class="chart-svg">
+                            <defs>
+                                <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
+                                    <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+                                </linearGradient>
+                            </defs>
+                            <path d="M0,90 C30,85 60,80 90,75 C120,70 140,60 170,55 C200,50 220,65 250,60 C280,55 300,40 330,35 C360,30 380,45 400,30 C420,25 450,20 470,15 L500,10 L500,120 L0,120 Z" fill="url(#chartGrad)"/>
+                            <path d="M0,90 C30,85 60,80 90,75 C120,70 140,60 170,55 C200,50 220,65 250,60 C280,55 300,40 330,35 C360,30 380,45 400,30 C420,25 450,20 470,15 L500,10" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+                            <circle cx="200" cy="52" r="3" fill="#fff"/>
+                            <text x="205" y="48" fill="rgba(255,255,255,0.6)" font-size="8">5,129.73 Thu, 15 Feb</text>
+                        </svg>
+                        <div class="chart-x-axis">
+                            <span>4,600</span>
+                            <span>Feb 2024</span>
+                            <span>Mar 2024</span>
+                            <span>Apr 2024</span>
+                            <span>May 2024</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- To-Do -->
+                <div class="widget-card todo-widget">
+                    <div class="widget-header">
+                        <span class="widget-title">To-Do</span>
+                        <i class="fas fa-plus widget-link"></i>
+                    </div>
+                    <div class="todo-section">
+                        <span class="todo-label">Today</span>
+                        <div class="todo-item">
+                            <input type="checkbox">
+                            <span>Go to pet shop</span>
+                            <span class="todo-priority high">High</span>
+                        </div>
+                    </div>
+                    <div class="todo-section">
+                        <span class="todo-label">Tomorrow</span>
+                        <div class="todo-item">
+                            <input type="checkbox">
+                            <span>Park workout</span>
+                            <span class="todo-priority medium">Medium</span>
+                        </div>
+                        <div class="todo-item">
+                            <input type="checkbox">
+                            <span>Haircut</span>
+                            <span class="todo-priority low">Low</span>
+                        </div>
+                        <div class="todo-item">
+                            <input type="checkbox">
+                            <span>Solo dining</span>
+                            <span class="todo-priority low">Low</span>
+                        </div>
+                    </div>
+                    <div class="todo-footer">
+                        <span class="widget-sub">Upcoming</span>
+                        <span class="todo-count">24</span>
+                    </div>
+                </div>
+
+                <!-- Spotify Now Playing (spans rows, right column) -->
+                <div class="widget-card spotify-widget">
+                    <div class="sc-header">
+                        <span class="widget-title">Spotify</span>
+                        <div class="sp-header-actions">
+                            <i class="fab fa-spotify" style="color: #1DB954; font-size: 1.1rem;"></i>
+                        </div>
+                    </div>
+                    <div id="spotify-now-playing">
+                        <!-- JS populates this -->
+                    </div>
+                </div>
+
+                <!-- Most visited crypto -->
+                <div class="widget-card crypto-widget">
+                    <div class="widget-header">
+                        <span class="widget-title">Most visited crypto</span>
+                        <i class="fas fa-external-link-alt widget-link"></i>
+                    </div>
+                    <div class="crypto-list">
+                        <div class="crypto-item">
+                            <span class="crypto-rank">1</span>
+                            <div class="crypto-icon btc"><i class="fab fa-bitcoin"></i></div>
+                            <span class="crypto-name">Bitcoin <span class="crypto-symbol">BTC</span></span>
+                            <span class="crypto-change negative"><i class="fas fa-caret-down"></i> 0.24%</span>
+                        </div>
+                        <div class="crypto-item">
+                            <span class="crypto-rank">2</span>
+                            <div class="crypto-icon eth"><i class="fab fa-ethereum"></i></div>
+                            <span class="crypto-name">Ethereum <span class="crypto-symbol">ETH</span></span>
+                            <span class="crypto-change positive"><i class="fas fa-caret-up"></i> 8.92%</span>
+                        </div>
+                        <div class="crypto-item">
+                            <span class="crypto-rank">3</span>
+                            <div class="crypto-icon sol">◎</div>
+                            <span class="crypto-name">Solana <span class="crypto-symbol">SOL</span></span>
+                            <span class="crypto-change negative"><i class="fas fa-caret-down"></i> 3.86%</span>
+                        </div>
+                        <div class="crypto-item">
+                            <span class="crypto-rank">4</span>
+                            <div class="crypto-icon mco"><i class="fas fa-shield-alt"></i></div>
+                            <span class="crypto-name">Crypto.com <span class="crypto-symbol">MCO</span></span>
+                            <span class="crypto-change negative"><i class="fas fa-caret-down"></i> 5.25%</span>
+                        </div>
+                    </div>
+                    <div class="crypto-dots">
+                        <span class="dot active"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                    </div>
+                </div>
+
+                <!-- CMC Fear & Greed Index -->
+                <div class="widget-card gauge-widget">
+                    <div class="widget-header">
+                        <span class="widget-title">CMC Fear & Greed Index</span>
+                    </div>
+                    <div class="gauge-container">
+                        <div class="gauge">
+                            <div class="gauge-bg"></div>
+                            <div class="gauge-needle"></div>
+                            <div class="gauge-center">
+                                <span class="gauge-value">70</span>
+                                <span class="gauge-label">Greed</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gauge-footer">
+                        <span class="widget-sub">Last 24 hours</span>
+                        <span class="gauge-prev">82 - Greed</span>
+                    </div>
+                </div>
+
+                <!-- Bills & Top-up -->
+                <div class="widget-card bills-widget">
+                    <div class="widget-header">
+                        <span class="widget-title">Bills & Top-up</span>
+                        <i class="fas fa-info-circle widget-link"></i>
+                    </div>
+                    <span class="bills-sublabel">Ready to pay</span>
+                    <div class="bills-list">
+                        <div class="bill-item">
+                            <i class="fas fa-mobile-alt"></i>
+                            <span>Postpaid mobile</span>
+                            <span class="bill-amount">0.1 ETH</span>
+                        </div>
+                        <div class="bill-item">
+                            <i class="fas fa-bolt"></i>
+                            <span>Electricity</span>
+                            <span class="bill-amount">0.05 ETH</span>
+                        </div>
+                        <div class="bill-item">
+                            <i class="fas fa-wifi"></i>
+                            <span>Internet</span>
+                            <span class="bill-amount">0.01 ETH</span>
+                        </div>
+                    </div>
+                    <div class="bills-footer">
+                        <span class="widget-sub">This month</span>
+                        <span class="todo-count">18</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script src="spotify.js"></script>
+</body>
+</html>
