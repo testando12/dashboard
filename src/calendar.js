@@ -3,7 +3,7 @@
 // Works entirely in the browser — no backend needed
 
 const GCAL_CONFIG = {
-    clientId: 'SEU_GOOGLE_CLIENT_ID_AQUI', // <-- Substitua pelo seu Client ID
+    clientId: '422689196931-1c3jgr9j2ldq8fodrdffbi1cs6prg1so.apps.googleusercontent.com',
     scopes: 'https://www.googleapis.com/auth/calendar.readonly',
     discoveryDoc: 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest',
 };
