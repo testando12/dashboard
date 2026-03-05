@@ -161,6 +161,36 @@ async function getCurrentlyPlaying() {
     }
 }
 
+// ========== Playback Controls ==========
+async function spotifyControl(action) {
+    const token = await getValidToken();
+    if (!token) return;
+
+    const endpoints = {
+        play:     { method: 'PUT',  url: `${SPOTIFY_CONFIG.apiBase}/me/player/play` },
+        pause:    { method: 'PUT',  url: `${SPOTIFY_CONFIG.apiBase}/me/player/pause` },
+        next:     { method: 'POST', url: `${SPOTIFY_CONFIG.apiBase}/me/player/next` },
+        previous: { method: 'POST', url: `${SPOTIFY_CONFIG.apiBase}/me/player/previous` }
+    };
+
+    const ep = endpoints[action];
+    if (!ep) return;
+
+    try {
+        await fetch(ep.url, {
+            method: ep.method,
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        // Refresh UI after short delay
+        setTimeout(async () => {
+            const data = await getCurrentlyPlaying();
+            updateNowPlaying(data);
+        }, 300);
+    } catch (err) {
+        console.error('Playback control error:', err);
+    }
+}
+
 // ========== UI Update ==========
 function formatMs(ms) {
     const sec = Math.floor(ms / 1000);
@@ -196,9 +226,6 @@ function updateNowPlaying(data) {
     container.innerHTML = `
         <div class="sp-cover-area">
             <img class="sp-album-art" src="${albumArt}" alt="${album}">
-            <div class="sp-playback-icon ${isPlaying ? 'playing' : 'paused'}">
-                <i class="fas ${isPlaying ? 'fa-pause' : 'fa-play'}"></i>
-            </div>
             <div class="sp-track-details">
                 <span class="sp-track-name">${track.name}</span>
                 <span class="sp-track-artist">${artist}</span>
@@ -212,6 +239,17 @@ function updateNowPlaying(data) {
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="sp-controls-bar">
+            <button class="sp-ctrl-btn" onclick="spotifyControl('previous')" title="Anterior">
+                <i class="fas fa-backward-step"></i>
+            </button>
+            <button class="sp-ctrl-btn play-pause" onclick="spotifyControl('${isPlaying ? 'pause' : 'play'}')" title="${isPlaying ? 'Pausar' : 'Tocar'}">
+                <i class="fas ${isPlaying ? 'fa-pause' : 'fa-play'}"></i>
+            </button>
+            <button class="sp-ctrl-btn" onclick="spotifyControl('next')" title="Próxima">
+                <i class="fas fa-forward-step"></i>
+            </button>
         </div>
     `;
 }

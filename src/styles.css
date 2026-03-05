@@ -466,6 +466,7 @@ body {
     background: rgba(180, 120, 60, 0.25);
     border: 1px solid rgba(180, 120, 60, 0.3);
     gap: 8px;
+    overflow: hidden;
 }
 
 .calendar-time {
@@ -786,6 +787,48 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+/* Playback controls bar */
+.sp-controls-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    padding: 8px 0 4px;
+}
+
+.sp-ctrl-btn {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.7);
+    font-size: 16px;
+    cursor: pointer;
+    padding: 4px;
+    transition: color 0.2s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sp-ctrl-btn:hover {
+    color: #fff;
+    transform: scale(1.1);
+}
+
+.sp-ctrl-btn.play-pause {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #fff;
+    color: #000;
+    font-size: 14px;
+}
+
+.sp-ctrl-btn.play-pause:hover {
+    background: #1DB954;
+    color: #fff;
+    transform: scale(1.05);
 }
 
 .sp-track-album {
