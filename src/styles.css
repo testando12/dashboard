@@ -546,6 +546,57 @@ body {
     color: rgba(255,255,255,0.5);
 }
 
+/* ==================== CALENDAR EXPAND ANIMATION ==================== */
+.calendar-widget .widget-link {
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+
+.calendar-widget.cal-expanded {
+    grid-row: 1 / 4;
+    z-index: 10;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.calendar-widget.cal-expanded::-webkit-scrollbar {
+    display: none;
+}
+
+.calendar-widget.cal-expanded .widget-link {
+    transform: rotate(45deg);
+}
+
+.calendar-widget.cal-expanding {
+    animation: calExpandIn 0.45s cubic-bezier(0.34, 1.15, 0.64, 1) forwards;
+}
+
+.calendar-widget.cal-collapsing {
+    animation: calCollapseOut 0.32s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes calExpandIn {
+    from {
+        clip-path: inset(0 0 82% 0 round 14px);
+        opacity: 0.5;
+    }
+    to {
+        clip-path: inset(0 0 0% 0 round 14px);
+        opacity: 1;
+    }
+}
+
+@keyframes calCollapseOut {
+    from {
+        clip-path: inset(0 0 0% 0 round 14px);
+        opacity: 1;
+    }
+    to {
+        clip-path: inset(0 0 82% 0 round 14px);
+        opacity: 0.5;
+    }
+}
+
 /* Calendar day dots for events */
 .calendar-days span {
     position: relative;

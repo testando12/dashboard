@@ -386,5 +386,53 @@
 
     <script src="spotify.js"></script>
     <script src="calendar.js"></script>
+    <script>
+    (function () {
+        const cal = document.querySelector('.calendar-widget');
+        const btn = cal.querySelector('.widget-link');
+        const spotify = document.querySelector('.spotify-widget');
+        let expanded = false;
+        let busy = false;
+
+        btn.addEventListener('click', () => {
+            if (busy) return;
+            busy = true;
+
+            if (!expanded) {
+                expanded = true;
+                // 1. Fade Spotify out
+                spotify.style.transition = 'opacity 0.18s ease, transform 0.18s ease';
+                spotify.style.opacity = '0';
+                spotify.style.transform = 'scale(0.96)';
+                spotify.style.pointerEvents = 'none';
+
+                setTimeout(() => {
+                    // 2. Span calendar across all rows
+                    cal.style.gridRow = '1 / 4';
+                    cal.classList.add('cal-expanded', 'cal-expanding');
+                    cal.addEventListener('animationend', () => {
+                        cal.classList.remove('cal-expanding');
+                        busy = false;
+                    }, { once: true });
+                }, 160);
+
+            } else {
+                expanded = false;
+                cal.classList.remove('cal-expanded');
+                cal.classList.add('cal-collapsing');
+                cal.addEventListener('animationend', () => {
+                    cal.classList.remove('cal-collapsing');
+                    cal.style.gridRow = '';
+                    // 3. Fade Spotify back
+                    spotify.style.transition = 'opacity 0.28s ease, transform 0.28s ease';
+                    spotify.style.opacity = '1';
+                    spotify.style.transform = 'scale(1)';
+                    spotify.style.pointerEvents = '';
+                    busy = false;
+                }, { once: true });
+            }
+        });
+    })();
+    </script>
 </body>
 </html>
