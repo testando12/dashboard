@@ -243,41 +243,84 @@
                     </div>
                 </div>
 
-                <!-- To-Do -->
-                <div class="widget-card todo-widget">
-                    <div class="widget-header">
-                        <span class="widget-title">To-Do</span>
-                        <i class="fas fa-plus widget-link"></i>
-                    </div>
-                    <div class="todo-section">
-                        <span class="todo-label">Today</span>
-                        <div class="todo-item">
-                            <input type="checkbox">
-                            <span>Go to pet shop</span>
-                            <span class="todo-priority high">High</span>
+                <!-- Para Você (To-Do) -->
+                <div class="widget-card todo-widget" id="todo-widget">
+                    <!-- Compact view -->
+                    <div id="todo-compact">
+                        <div class="widget-header">
+                            <span class="widget-title">Para Você</span>
+                            <i class="fas fa-plus widget-link" id="todo-expand-btn"></i>
+                        </div>
+                        <div class="todo-section">
+                            <span class="todo-label">Hoje</span>
+                            <div class="todo-item">
+                                <input type="checkbox">
+                                <span>Go to pet shop</span>
+                                <span class="todo-priority high">Alta</span>
+                            </div>
+                        </div>
+                        <div class="todo-section">
+                            <span class="todo-label">Amanhã</span>
+                            <div class="todo-item">
+                                <input type="checkbox">
+                                <span>Park workout</span>
+                                <span class="todo-priority medium">Média</span>
+                            </div>
+                            <div class="todo-item">
+                                <input type="checkbox">
+                                <span>Haircut</span>
+                                <span class="todo-priority low">Baixa</span>
+                            </div>
+                            <div class="todo-item">
+                                <input type="checkbox">
+                                <span>Solo dining</span>
+                                <span class="todo-priority low">Baixa</span>
+                            </div>
+                        </div>
+                        <div class="todo-footer">
+                            <span class="widget-sub">Pendentes</span>
+                            <span class="todo-count">24</span>
                         </div>
                     </div>
-                    <div class="todo-section">
-                        <span class="todo-label">Tomorrow</span>
-                        <div class="todo-item">
-                            <input type="checkbox">
-                            <span>Park workout</span>
-                            <span class="todo-priority medium">Medium</span>
+                    <!-- Expanded view -->
+                    <div id="todo-expanded-wrap" style="display:none; height:100%; flex-direction:column; gap:8px; overflow:hidden;">
+                        <div class="widget-header">
+                            <span class="widget-title">Para Você</span>
+                            <i class="fas fa-times todo-exp-close" style="cursor:pointer; color:rgba(255,255,255,0.5); font-size:16px;"></i>
                         </div>
-                        <div class="todo-item">
-                            <input type="checkbox">
-                            <span>Haircut</span>
-                            <span class="todo-priority low">Low</span>
+                        <div class="todo-tabs" id="todo-tabs">
+                            <button class="todo-tab active" data-filter="all">Todos</button>
+                            <button class="todo-tab" data-filter="today">Hoje</button>
+                            <button class="todo-tab" data-filter="tomorrow">Amanhã</button>
+                            <button class="todo-tab" data-filter="upcoming">Pendentes</button>
                         </div>
-                        <div class="todo-item">
-                            <input type="checkbox">
-                            <span>Solo dining</span>
-                            <span class="todo-priority low">Low</span>
+                        <div class="todo-exp-list" id="todo-exp-list"></div>
+                        <div class="todo-bottom-bar">
+                            <span class="todo-bottom-count" id="todo-bottom-count">0 pendentes</span>
+                            <button class="todo-add-fab" id="todo-add-btn"><i class="fas fa-plus"></i></button>
                         </div>
                     </div>
-                    <div class="todo-footer">
-                        <span class="widget-sub">Upcoming</span>
-                        <span class="todo-count">24</span>
+                </div>
+
+                <!-- Add Task Modal -->
+                <div class="todo-modal-overlay" id="todo-modal-overlay" style="display:none;">
+                    <div class="todo-modal">
+                        <div class="todo-modal-header">
+                            <span class="todo-modal-title">Nova Tarefa</span>
+                            <i class="fas fa-times" id="todo-modal-close"></i>
+                        </div>
+                        <input type="text" class="todo-modal-input" id="todo-modal-text" placeholder="O que precisa fazer?">
+                        <select class="todo-modal-select" id="todo-modal-when">
+                            <option value="today">Hoje</option>
+                            <option value="tomorrow">Amanhã</option>
+                            <option value="upcoming">Pendente</option>
+                        </select>
+                        <select class="todo-modal-select" id="todo-modal-priority">
+                            <option value="low">Prioridade: Baixa</option>
+                            <option value="medium">Prioridade: Média</option>
+                            <option value="high">Prioridade: Alta</option>
+                        </select>
+                        <button class="todo-modal-save" id="todo-modal-save">Salvar</button>
                     </div>
                 </div>
 
@@ -446,6 +489,140 @@
                     busy = false;
                 }, { once: true });
             }
+        });
+    })();
+    </script>
+
+    <!-- Todo Widget Logic -->
+    <script>
+    (function(){
+        const todoWidget  = document.getElementById('todo-widget');
+        const todoCompact = document.getElementById('todo-compact');
+        const todoExpWrap = document.getElementById('todo-expanded-wrap');
+        const bills       = document.querySelector('.bills-widget');
+        let expanded = false;
+        let filter   = 'all';
+
+        // Default tasks (used only on first load)
+        const DEFAULT_TASKS = [
+            { id: 1, text: 'Go to pet shop',  when: 'today',    priority: 'high',   done: false },
+            { id: 2, text: 'Park workout',     when: 'tomorrow', priority: 'medium', done: false },
+            { id: 3, text: 'Haircut',          when: 'tomorrow', priority: 'low',    done: false },
+            { id: 4, text: 'Solo dining',      when: 'tomorrow', priority: 'low',    done: false }
+        ];
+
+        let tasks = JSON.parse(localStorage.getItem('todoTasks') || 'null') || DEFAULT_TASKS;
+
+        function save() { localStorage.setItem('todoTasks', JSON.stringify(tasks)); }
+
+        function label(p) { return p === 'high' ? 'Alta' : p === 'medium' ? 'Média' : 'Baixa'; }
+
+        function renderTasks() {
+            const list = document.getElementById('todo-exp-list');
+            if (!list) return;
+            const view = filter === 'all' ? tasks : tasks.filter(t => t.when === filter);
+            if (!view.length) {
+                list.innerHTML = '<div class="todo-empty">Sem tarefas aqui 👌</div>';
+            } else {
+                list.innerHTML = view.map(t => `
+                    <div class="todo-exp-item${t.done ? ' todo-done' : ''}" data-id="${t.id}">
+                        <input type="checkbox" ${t.done ? 'checked' : ''} onchange="todoToggleDone(${t.id})">
+                        <span class="todo-exp-text">${t.text}</span>
+                        <span class="todo-priority ${t.priority}">${label(t.priority)}</span>
+                        <i class="fas fa-trash todo-del-btn" onclick="todoDelete(${t.id})"></i>
+                    </div>`).join('');
+            }
+            const pending = tasks.filter(t => !t.done).length;
+            const el = document.getElementById('todo-bottom-count');
+            if (el) el.textContent = `${pending} pendente${pending !== 1 ? 's' : ''}`;
+        }
+
+        window.todoToggleDone = function(id) {
+            const t = tasks.find(t => t.id === id);
+            if (t) { t.done = !t.done; save(); renderTasks(); }
+        };
+        window.todoDelete = function(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            save(); renderTasks();
+        };
+
+        // Filter tabs
+        document.getElementById('todo-tabs')?.addEventListener('click', e => {
+            const tab = e.target.closest('.todo-tab');
+            if (!tab) return;
+            filter = tab.dataset.filter;
+            document.querySelectorAll('.todo-tab').forEach(b => b.classList.remove('active'));
+            tab.classList.add('active');
+            renderTasks();
+        });
+
+        // Add task
+        document.getElementById('todo-add-btn')?.addEventListener('click', () => {
+            document.getElementById('todo-modal-overlay').style.display = 'flex';
+            setTimeout(() => document.getElementById('todo-modal-text').focus(), 50);
+        });
+        document.getElementById('todo-modal-close')?.addEventListener('click', closeModal);
+        document.getElementById('todo-modal-overlay')?.addEventListener('click', e => {
+            if (e.target.id === 'todo-modal-overlay') closeModal();
+        });
+        document.getElementById('todo-modal-text')?.addEventListener('keydown', e => {
+            if (e.key === 'Enter') document.getElementById('todo-modal-save').click();
+        });
+        document.getElementById('todo-modal-save')?.addEventListener('click', () => {
+            const text = document.getElementById('todo-modal-text').value.trim();
+            if (!text) return;
+            tasks.push({
+                id: Date.now(),
+                text,
+                when: document.getElementById('todo-modal-when').value,
+                priority: document.getElementById('todo-modal-priority').value,
+                done: false
+            });
+            save(); renderTasks(); closeModal();
+            document.getElementById('todo-modal-text').value = '';
+        });
+        function closeModal() {
+            document.getElementById('todo-modal-overlay').style.display = 'none';
+        }
+
+        // Expand / Collapse
+        function openTodo() {
+            expanded = true;
+            todoCompact.style.display = 'none';
+            todoExpWrap.style.display = 'flex';
+            todoWidget.classList.add('todo-expanded', 'todo-expanding');
+            if (bills) {
+                bills.style.transition = 'opacity 0.18s ease, transform 0.18s ease';
+                bills.style.opacity = '0';
+                bills.style.transform = 'scale(0.96)';
+                bills.style.pointerEvents = 'none';
+            }
+            todoWidget.addEventListener('animationend', () => {
+                todoWidget.classList.remove('todo-expanding');
+            }, { once: true });
+            renderTasks();
+        }
+
+        function closeTodo() {
+            expanded = false;
+            todoWidget.classList.remove('todo-expanded');
+            todoWidget.classList.add('todo-collapsing');
+            todoWidget.addEventListener('animationend', () => {
+                todoWidget.classList.remove('todo-collapsing');
+                todoExpWrap.style.display = 'none';
+                todoCompact.style.display = '';
+                if (bills) {
+                    bills.style.transition = 'opacity 0.28s ease, transform 0.28s ease';
+                    bills.style.opacity = '1';
+                    bills.style.transform = 'scale(1)';
+                    bills.style.pointerEvents = '';
+                }
+            }, { once: true });
+        }
+
+        todoWidget.addEventListener('click', e => {
+            if (e.target.closest('#todo-expand-btn')) { openTodo(); return; }
+            if (e.target.closest('.todo-exp-close'))  { closeTodo(); return; }
         });
     })();
     </script>

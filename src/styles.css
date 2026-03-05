@@ -1190,6 +1190,263 @@ body {
     color: rgba(255,255,255,0.6);
 }
 
+/* ==================== TODO EXPAND ==================== */
+.todo-widget .widget-link,
+.todo-widget .todo-exp-close {
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+
+.todo-widget.todo-expanded {
+    grid-row: 2 / 4;
+    z-index: 10;
+    overflow: hidden;
+}
+
+.todo-widget.todo-expanding {
+    animation: todoExpandIn 0.45s cubic-bezier(0.34, 1.15, 0.64, 1) forwards;
+}
+
+.todo-widget.todo-collapsing {
+    animation: todoCollapseOut 0.32s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes todoExpandIn {
+    from { clip-path: inset(0 0 52% 0 round 14px); opacity: 0.5; }
+    to   { clip-path: inset(0 0 0%  0 round 14px); opacity: 1;   }
+}
+
+@keyframes todoCollapseOut {
+    from { clip-path: inset(0 0 0%  0 round 14px); opacity: 1;   }
+    to   { clip-path: inset(0 0 52% 0 round 14px); opacity: 0.5; }
+}
+
+/* Filter tabs */
+.todo-tabs {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.todo-tab {
+    flex: 1;
+    background: rgba(255,255,255,0.06);
+    border: none;
+    border-radius: 8px;
+    color: rgba(255,255,255,0.4);
+    font-size: 11px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    padding: 6px 4px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.todo-tab.active {
+    background: rgba(255,255,255,0.14);
+    color: rgba(255,255,255,0.9);
+}
+
+.todo-tab:hover:not(.active) {
+    background: rgba(255,255,255,0.09);
+    color: rgba(255,255,255,0.6);
+}
+
+/* Expanded task list */
+.todo-exp-list {
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.todo-exp-list::-webkit-scrollbar { display: none; }
+
+.todo-exp-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.8);
+    background: rgba(255,255,255,0.04);
+    border-radius: 8px;
+    padding: 8px 10px;
+    transition: background 0.18s;
+}
+
+.todo-exp-item:hover { background: rgba(255,255,255,0.07); }
+
+.todo-exp-item input[type="checkbox"] {
+    accent-color: #aaa;
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.todo-exp-text {
+    flex: 1;
+    transition: opacity 0.2s;
+}
+
+.todo-done .todo-exp-text {
+    opacity: 0.3;
+    text-decoration: line-through;
+}
+
+.todo-del-btn {
+    font-size: 11px;
+    color: rgba(255,255,255,0.18);
+    cursor: pointer;
+    transition: color 0.18s;
+    flex-shrink: 0;
+}
+
+.todo-del-btn:hover { color: #ef5350; }
+
+.todo-empty {
+    text-align: center;
+    color: rgba(255,255,255,0.22);
+    font-size: 12px;
+    padding-top: 24px;
+}
+
+/* Bottom bar */
+.todo-bottom-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding-top: 10px;
+    flex-shrink: 0;
+}
+
+.todo-bottom-count {
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+}
+
+.todo-add-fab {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+    border: none;
+    color: rgba(255,255,255,0.7);
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.todo-add-fab:hover {
+    background: rgba(255,255,255,0.2);
+    transform: scale(1.1);
+}
+
+/* Add Task Modal */
+.todo-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 1000;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.todo-modal {
+    width: 100%;
+    max-width: 420px;
+    background: rgba(38,38,48,0.97);
+    backdrop-filter: blur(24px);
+    border-radius: 18px 18px 0 0;
+    padding: 20px 20px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    animation: todoModalUp 0.3s cubic-bezier(0.34, 1.15, 0.64, 1) forwards;
+}
+
+@keyframes todoModalUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+}
+
+.todo-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.todo-modal-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.9);
+}
+
+.todo-modal-header .fa-times {
+    color: rgba(255,255,255,0.4);
+    font-size: 15px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.todo-modal-header .fa-times:hover { color: rgba(255,255,255,0.8); }
+
+.todo-modal-input {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 10px 12px;
+    color: rgba(255,255,255,0.9);
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.todo-modal-input:focus { border-color: rgba(255,255,255,0.25); }
+.todo-modal-input::placeholder { color: rgba(255,255,255,0.25); }
+
+.todo-modal-select {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 9px 12px;
+    color: rgba(255,255,255,0.75);
+    font-size: 12px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.todo-modal-select option { background: #2a2a38; color: #fff; }
+
+.todo-modal-save {
+    background: rgba(255,255,255,0.14);
+    border: none;
+    border-radius: 10px;
+    padding: 11px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s;
+    width: 100%;
+}
+
+.todo-modal-save:hover { background: rgba(255,255,255,0.22); }
+
 /* ==================== SPOTIFY WIDGET ==================== */
 .spotify-widget {
     grid-column: 4;
